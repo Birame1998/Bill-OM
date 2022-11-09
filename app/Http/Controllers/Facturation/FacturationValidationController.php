@@ -42,6 +42,8 @@ class FacturationValidationController extends Controller
         return view('Facturation.Facturation.index_envalidation',compact('facturation','nom_partenaire', 'dates'));
     }
 
+    
+
     /**
      * Show the form for creating a new resource.
      *
