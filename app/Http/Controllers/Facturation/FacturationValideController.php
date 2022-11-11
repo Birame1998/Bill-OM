@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Facturation;
 
+use File;
 use ZipArchive;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -9,7 +10,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
-use File;
+use App\Models\Facturation\Catalogue;
 use App\Models\Facturation\Facturation;
 use Illuminate\Support\Facades\Storage;
 
@@ -38,6 +39,32 @@ class FacturationValideController extends Controller
         return view('Facturation.Facturation.index_valide',compact('facturation'));
     }
 
+
+    public function dateDifference($date)
+    {
+        $factDate=str_replace('/','-',$date);
+        $trueDate=Carbon::parse($factDate);
+        $diff=now()->diffInDays($trueDate);
+        return $diff;
+    }
+
+    public function dormants()
+    {
+        $info = $this->userRepo->infoConnect();
+        $this->visiteLien($info,"liste partenaire dormant");
+
+        $facturation = Facturation::where("statut",1)->orderBy('date_transaction','desc')->get();
+        $cpt=[];
+        for ($i=0; $i < $facturation->count(); $i++) { 
+            if($this->dateDifference($facturation[$i]->date_transaction)>30){
+                array_push($cpt,$facturation[$i]->nom_partenaire);
+            }
+        }                                              
+       $partenaires=Catalogue::with(['sim_designation'])->whereBetween('nom_partenaire',$cpt)->orderBy('num_ap','desc')->paginate(15);
+       return view('Facturation.Dormant.index',compact('partenaires'));
+
+    }
+
     public function search(Request $request){
         $recherche = $this->recherche($request->nom_partenaire,$request->dates);
         $facturation = $recherche[0];
@@ -63,6 +90,24 @@ class FacturationValideController extends Controller
             // $pdf->save($path.'/'.'invoice1.pdf');
             return $pdf->download($onglet_facturation.'_'.$mytime.'.pdf');
 
+    }
+    public function exportSleeping()
+    {
+        $facturation = Facturation::where("statut",1)->orderBy('date_transaction','desc')->get();
+        $cpt=[];
+        for ($i=0; $i < $facturation->count(); $i++) { 
+            if($this->dateDifference($facturation[$i]->date_transaction)>30){
+                array_push($cpt,$facturation[$i]->nom_partenaire);
+            }
+        }                                              
+       $partenaires=Catalogue::with(['sim_designation'])->whereBetween('nom_partenaire',$cpt)->orderBy('num_ap','desc')->get();
+       $data = [
+        'date' => date('d/m/Y'),
+        'mois' =>date('M'),
+        'partenaires'=>$partenaires
+       ];
+       $pdf = PDF::loadView('Facturation.Dormant.pdf', $data)->setPaper('a4', 'landscape');
+       return $pdf;
     }
 
     public function export_pdf(Request $request)

@@ -71,7 +71,7 @@ class LoginController extends Controller
                             'date_login' => null,
                             'tentative' => null
                         ]);
-                        return redirect()->intended('facturation_envalidation');
+                        return redirect()->intended('catalogue');
                     }
                  }
                 elseif($compte->is_active!=1){

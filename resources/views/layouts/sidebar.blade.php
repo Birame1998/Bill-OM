@@ -153,7 +153,18 @@
                             </li>
                         </ul>
                     @endcan
+                    @can("affichage_partenaires_dormants")
+                        <ul class="nav-second-level" aria-expanded="false">
+                            <li class="nav-item {{ Route::is('partenaires.*')  ? 'nav-item active' : '' }}">
+                                <a class="{{ Route::is('partenaires.*')  ? 'nav-link active' : '' }}"
+                                    href=" {{ route('partenaires_dormants.index') }}">
+                                    <i class="mdi mdi-sleep"></i><span>P_Dormants</span>
+                                </a>
+                            </li>
+                        </ul>
+                    @endcan
                 </li>
+              
             @endcan
             @can("gestion_acces")
                 <li class="menu-label">Gestion des utilisateurs</li>
@@ -231,7 +242,6 @@
         </ul>
     </div>
 <!-- end left-sidenav-->
-
 
 
 

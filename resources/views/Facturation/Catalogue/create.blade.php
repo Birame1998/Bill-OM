@@ -52,7 +52,7 @@
                                     <select class="form-control mb-3 custom-select" name="type_partenaire_id" required>
                                         <option value="">Choisir un type de partenaire</option>
                                         @forelse ($type_partenaire as $value)
-                                            <option value="{{ $value['id'] }}">{{ $value['libelle'] }}</option>
+                                            <option value="{{ $value['id'] }}" {{ (($value['libelle']) == 'Marchand') ? 'selected' : '' }}>{{ $value['libelle'] }}</option>
                                             @empty
                                             <option value="">Aucun type de partenaire disponible</option>
                                         @endforelse
@@ -63,7 +63,7 @@
                                     <select class="form-control mb-3 custom-select" name="inclure_id" required>
                                         <option value="">Choisir</option>
                                         @forelse ($inclure as $value)
-                                            <option value="{{ $value['id'] }}">{{ $value['libelle'] }}</option>
+                                            <option value="{{ $value['id'] }}" {{ (($value['libelle']) == 'Oui') ? 'selected' : '' }}>{{ $value['libelle'] }}</option>
                                             @empty
                                             <option value="">Aucune donnée disponible</option>
                                         @endforelse

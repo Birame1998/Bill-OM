@@ -17,9 +17,10 @@ class SleppingAccount extends Mailable
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($user,$pdf)
     {
         $this->user=$user;
+        $this->pdf=$pdf;
     }
 
     /**
@@ -33,6 +34,7 @@ class SleppingAccount extends Mailable
 
 
         return $this->subject('Liste des comptes dormants pour ce mois-ci')
-                    ->view('emails.sleeping_account');
+                    ->view('emails.sleeping_account')
+                    ->attachData($this->pdf->output(), 'sleeping_account_report.pdf');
     }
 }

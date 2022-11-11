@@ -12,7 +12,7 @@ class CreateCatalogueHasSimTable extends Migration
      * @return void
      */
     public function up()
-    {
+    { 
         Schema::create('catalogue_has_sim', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('catalogue_id');

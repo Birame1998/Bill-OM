@@ -1,9 +1,10 @@
 
 <?php
 
-use App\Models\Facturation\Catalogue;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Facturation\Catalogue;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Facturation\FacturationValideController;
 
 
 /*
@@ -28,10 +29,18 @@ Route::group(['middleware' => 'preventBackHistory'],function(){
 
     Route::middleware(['auth'])->group(function () {
         // GESTION ACCES
-        Route::resource('permissions', '\App\Http\Controllers\Securite\PermissionController');
-        Route::resource('users', '\App\Http\Controllers\Securite\UserController');
-        Route::resource('interim', '\App\Http\Controllers\Securite\InterimController');
+        //Route::resource('permissions', '\App\Http\Controllers\Securite\PermissionController');
         Route::resource('catalogue', '\App\Http\Controllers\Facturation\CatalogueController'); 
+        Route::group(['middleware' => ['role:Super Admin']], function () {
+            Route::resource('permissions', '\App\Http\Controllers\Securite\PermissionController');    
+            Route::resource('users', '\App\Http\Controllers\Securite\UserController');
+            Route::resource('roles', '\App\Http\Controllers\Securite\RoleController');
+            Route::resource('structures', '\App\Http\Controllers\StructureOFMS\StructureController');
+            Route::resource('interim', '\App\Http\Controllers\Securite\InterimController');
+            Route::get('user/update-status', '\App\Http\Controllers\Securite\UserController@updateStatus')->name('update.user.status');
+            Route::resource('trackings', '\App\Http\Controllers\Securite\TrackingController');
+        });
+        Route::get('partenaires',[FacturationValideController::class,'dormants'])->name('partenaires_dormants.index');
         Route::resource('facturation_envalidation', '\App\Http\Controllers\Facturation\FacturationValidationController');
         Route::post('facturation_envalidation/search', '\App\Http\Controllers\Facturation\FacturationValidationController@search')->name('facturation_envalidation.search');
         Route::post('facturation_envalidation/rejet', '\App\Http\Controllers\Facturation\FacturationValidationController@rejet')->name('facturation_envalidation.rejet');
@@ -49,17 +58,13 @@ Route::group(['middleware' => 'preventBackHistory'],function(){
         Route::get('download_file_action','ExportFile@download_file_action');
         Route::get('download_zip_file_action','ExportFile@download_zip_file_action');
 
-        // user status update
-        Route::get('user/update-status', '\App\Http\Controllers\Securite\UserController@updateStatus')->name('update.user.status');
-        Route::resource('roles', '\App\Http\Controllers\Securite\RoleController');
 
+        // user status update
         // Structure OFMS
-        Route::resource('structures', '\App\Http\Controllers\StructureOFMS\StructureController');
 
         ////////////////////////////////////////////SECURITE////////////////////////////////////////////////
 
         // Tracking routes
-        Route::resource('trackings', '\App\Http\Controllers\Securite\TrackingController');
 
         // Render perticular view file by foldername and filename and all passed in only one controller at a time
         Route::get('{folder}/{file}', 'MetricaController@indexWithOneFolder');

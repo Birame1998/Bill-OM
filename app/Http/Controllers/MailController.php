@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Console\Commands\SleepingAccount;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Facturation\Catalogue;
+use App\Models\Facturation\Facturation;
 
 class MailController extends Controller
 {
@@ -14,7 +18,6 @@ class MailController extends Controller
      */
     public function index()
     {
-        Mail::to("");
         //
     }
 
