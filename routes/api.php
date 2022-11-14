@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiCatalogueController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,3 +16,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:api')->get('/user', 'UserController@AuthRouteAPI');
+Route::post('catalogue_by_sim_head','ApiCatalogueController@index');
+
