@@ -132,7 +132,7 @@ return view('Facturation.Catalogue.index')->with('catalogue',$catalogue);
                 'action' => "a créé le catalogue num_ap: ".$request->num_ap." ,nom_partenaire: ".
                             $request->nom_partenaire." ,type_partenaire: ".$this->type_partenaire[$request->type_partenaire_id]['libelle'].
                             " ,inclure: ".$this->inclure[$request->inclure_id]['libelle']." ,taux_commission: ".$request->taux_commission.
-                            " ,compte_bancaire: ".$request->compte_bancaire." ,mode_reversement: ".$this->mode_reversement[$request->mode_reversement_id]['libelle'].
+                            " ,compte_bancaire: ".$request->compte_bancaire." ,commentaire: ".$request->commentaire." ,mode_reversement: ".$this->mode_reversement[$request->mode_reversement_id]['libelle'].
                             " ,sim_head, identifiant_designation, onglet_facturation_id et blacklist_c2c: ".json_encode($request->car),
                 'ip_machine' => request()->ip(),
                 'url' => url()->current()

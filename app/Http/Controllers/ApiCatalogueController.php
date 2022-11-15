@@ -13,7 +13,7 @@ class ApiCatalogueController extends Controller
         $catalogue=Catalogue::whereHas('sim_designation',function($q) use ($sim_head)
             {
                $q->where('sim_head',$sim_head);
-            })->orderBy('num_ap','DESC')->get(); 
+            })->with(['sim_designation'])->orderBy('num_ap','DESC')->get(); 
         return $catalogue;
     }
 }
