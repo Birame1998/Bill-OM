@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
 use App\Models\Facturation\Facturation;
+use DB;
 
 class FacturationValidationController extends Controller
 {
@@ -30,7 +31,13 @@ class FacturationValidationController extends Controller
     {
         $info = $this->userRepo->infoConnect();
         $this->visiteLien($info,"liste facture en validation");
-        $facturation = Facturation::where("statut",1)->get();
+        $yesterday=date("Ymd", strtotime("yesterday"));
+        //dd($yesterday);
+        $facturation = Facturation::select('*')
+        ->where('statut',1)
+        ->get();
+        //(date('m/d/Y',strtotime("-39 days"))==$facturation[0]->date_transaction);
+        //dd($facturation);
         return view('Facturation.Facturation.index_envalidation',compact('facturation'));
     }
 
@@ -42,7 +49,6 @@ class FacturationValidationController extends Controller
         return view('Facturation.Facturation.index_envalidation',compact('facturation','nom_partenaire', 'dates'));
     }
 
-    
 
     /**
      * Show the form for creating a new resource.

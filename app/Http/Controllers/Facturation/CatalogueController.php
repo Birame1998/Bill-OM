@@ -58,7 +58,7 @@ if (request('search') && request('search2')==null) {
             })->orderBy('num_ap','DESC')->paginate(15);
     }
 } elseif(request(('search2')) && request('search')==null){
-     $catalogue=Catalogue::with(['sim_designation'])->where('nom_partenaire','like','%'.request('search2').'%')->orderBy('num_ap','DESC')->paginate(15);
+     $catalogue=Catalogue::with(['sim_designation'])->where('nom_partenaire',request('search2'))->orderBy('num_ap','DESC')->paginate(15);
 }
 elseif(request('search') && request('search2')){
     $id=0;
@@ -68,8 +68,8 @@ elseif(request('search') && request('search2')){
         }
            $catalogue=Catalogue::whereHas('sim_designation',function($q) use ($id)
             {
-               $q->where('onglet_facturation_id','like','%'.$id.'%');
-            })->where('nom_partenaire','like','%'.request('search2').'%')->orderBy('num_ap','DESC')->paginate(15);
+               $q->where('onglet_facturation_id',$id);
+            })->where('nom_partenaire',request('search2'))->orderBy('num_ap','DESC')->paginate(15);
     }
 }
 else{

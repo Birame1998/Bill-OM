@@ -1,6 +1,6 @@
 <div class="row justify-content-center">
     <div class="col-md-4 mb-4">
-        {{-- <input type="text" class="form-control" name="nom_partenaire" required> --}}
+        {{-- <input type="text" class="form-control" name="nom_partenaire" required> 
         <div class="input-group">
             <select class="select2 form-control mb-3 custom-select" style="width: 100%; height:36px;" name="nom_partenaire" required>
                 @if(isset($nom_partenaire))
@@ -23,7 +23,7 @@
                         @endforelse
                 @endif
             </select>
-        </div>
+        </div>--}}
     </div>
     <div class="col-md-4 mb-4">
         {{-- <input type="text" class="form-control" name="nom_partenaire" required> --}}
@@ -46,6 +46,10 @@
             <a href="{{ route('facturation_envalidation.index') }}" class="btn btn-dark">
                 <span style="color:white">Tous</span>
             </a>
+        @elseif (Route::is('recyclage_uv.search') || Route::is('recyclage_uv.index'))
+            <a href="{{ route('recyclage_uv.index') }}" class="btn btn-dark">
+                <span style="color:white">Tous</span>
+            </a>    
         @endif
     </div>
 </div>

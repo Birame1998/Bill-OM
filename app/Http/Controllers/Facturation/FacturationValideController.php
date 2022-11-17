@@ -14,6 +14,8 @@ use App\Models\Facturation\Catalogue;
 use App\Models\Facturation\Facturation;
 use Illuminate\Support\Facades\Storage;
 
+use function PHPSTORM_META\map;
+
 class FacturationValideController extends Controller
 {
     private $userRepo;
@@ -52,14 +54,16 @@ class FacturationValideController extends Controller
     {
         $info = $this->userRepo->infoConnect();
         $this->visiteLien($info,"liste partenaire dormant");
-
         $facturation = Facturation::where("statut",1)->orderBy('date_transaction','desc')->get();
+        $facturationU=$facturation->unique('nom_partenaire');
+        //dd($facturationU);
         $cpt=[];
-        for ($i=0; $i < $facturation->count(); $i++) { 
-            if($this->dateDifference($facturation[$i]->date_transaction)>30){
-                array_push($cpt,$facturation[$i]->nom_partenaire);
+        //dd($facturation);  
+        foreach($facturationU as $fact){
+            if($this->dateDifference($fact->date_transaction)>30){
+                array_push($cpt,$fact->nom_partenaire);
             }
-        }                                              
+        }                                          
        $partenaires=Catalogue::with(['sim_designation'])->whereBetween('nom_partenaire',$cpt)->orderBy('num_ap','desc')->paginate(15);
        return view('Facturation.Dormant.index',compact('partenaires'));
 
@@ -122,39 +126,7 @@ class FacturationValideController extends Controller
                 $facture_array = Facturation::where("statut",2)->whereIn("id", $request->selected_id)
                                     ->distinct('onglet_facturation_id')->pluck('onglet_facturation_id')->toArray();
                 if(count($facture_array)!=1){
-                    File::cleanDirectory(public_path("export\\"));
-                    foreach($facture_array as $val){
-                        $facture = Facturation::where("statut",2)->whereIn("id", $request->selected_id)
-                            ->where("onglet_facturation_id", $val)->get();
-                        $facture_sum = Facturation::where("statut",2)->whereIn("id", $request->selected_id)
-                                        ->where("onglet_facturation_id", $val)->sum("a_reverser");
-
-                        $data = [
-                            'date' => date('m/d/Y'),
-                            'facture' => $facture,
-                            'facture_sum' => $facture_sum
-                        ];
-                        $pdf = PDF::loadView('Facturation.Facturation.pdf', $data)->setPaper('a4', 'landscape');
-                        $path = public_path("export\\");
-                        $onglet_facturation = $this->onglet_facturation[$facture[0]->onglet_facturation_id]['libelle'];
-                        $pdf->save($path.'/'.$onglet_facturation.'_'.$mytime.'.pdf');
-
-                        // $pdf->download('inv'.$val.'.pdf');
-                    }
-                    $zip = new \ZipArchive();
-                    $fileName = 'export_facture_'.$mytime.'.zip';
-                    $path = public_path('export\\').$fileName;
-
-                    if ($zip->open($path, \ZipArchive::CREATE)== TRUE)
-                    {
-                        $files = File::files(public_path('export\\'));
-                        foreach ($files as $key => $value){
-                            $relativeName = basename($value);
-                            $zip->addFile($value, $relativeName);
-                        }
-                        $zip->close();
-                    }
-                    return response()->download($path);
+                    return back()->with('error', 'Vous ne pouvez pas exportez des factures de différents onglets');
                 }
                 else{
                     return $this->exportUnique($request->selected_id);

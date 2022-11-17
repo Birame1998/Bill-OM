@@ -37,6 +37,11 @@
                             @csrf
                             @can('export_facture')
                                 <h4 class="mt-0 header-title"></h4>
+                                @if(session()->has('error'))
+                                    <div class="alert alert-danger" id="message_id" style="width: fit-content;">
+                                        {{ session()->get('error') }}
+                                    </div>
+                                @endif
                                 <div class="pull-right">
                                     <button type="submit" class="btn btn-dark mb-2 mb-lg-3"><i class="fas fa-print"></i>&nbsp;Export PDF</button>
                                 </div>
@@ -265,7 +270,12 @@
 @stop
 
 @section('footerScript')
-
+    <script>
+    $("document").ready(function(){
+    setTimeout(function(){
+    $("#message_id").fadeOut('300')}, 3000 );
+    });
+    </script>
     <script src="{{ URL::asset('plugins/moment/moment.js')}}"></script>
     <script src="{{ URL::asset('plugins/daterangepicker/daterangepicker.js')}}"></script>
     <script src="{{ URL::asset('plugins/select2/select2.min.js')}}"></script>

@@ -111,7 +111,6 @@ class Controller extends BaseController
     //     }
     //     return $notification;
     // }
-
     public function recherche($nom_partenaire,$dates){
         $user = User::with(['structure'])->where('id',Auth::id())->first();
         $user = $user->prenom." ".$user->nom." [".$user->structure->libelle."]";

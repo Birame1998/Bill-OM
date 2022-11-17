@@ -1,6 +1,7 @@
 
 <?php
 
+use App\Http\Controllers\ComptesDormantsController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Facturation\Catalogue;
 use Illuminate\Support\Facades\Route;
@@ -40,16 +41,17 @@ Route::group(['middleware' => 'preventBackHistory'],function(){
             Route::get('user/update-status', '\App\Http\Controllers\Securite\UserController@updateStatus')->name('update.user.status');
             Route::resource('trackings', '\App\Http\Controllers\Securite\TrackingController');
         });
-        Route::get('partenaires',[FacturationValideController::class,'dormants'])->name('partenaires_dormants.index');
+        Route::get('partenaires','\App\Http\Controllers\Facturation\ComptesDormantsController@index')->name('partenaires_dormants.index');
         Route::resource('facturation_envalidation', '\App\Http\Controllers\Facturation\FacturationValidationController');
         Route::post('facturation_envalidation/search', '\App\Http\Controllers\Facturation\FacturationValidationController@search')->name('facturation_envalidation.search');
         Route::post('facturation_envalidation/rejet', '\App\Http\Controllers\Facturation\FacturationValidationController@rejet')->name('facturation_envalidation.rejet');
-
+        
         Route::resource('facturation_valide', '\App\Http\Controllers\Facturation\FacturationValideController');
         Route::post('facturation_valide/search', '\App\Http\Controllers\Facturation\FacturationValideController@search')->name('facturation_valide.search');
-
+        
         Route::resource('facturation_rejetee', '\App\Http\Controllers\Facturation\FacturationRejeteController');
         Route::resource('recyclage_uv', '\App\Http\Controllers\Facturation\RecyclageUVController');
+        Route::post('recyclage_uv/search', '\App\Http\Controllers\Facturation\RecyclageUVController@search')->name('recyclage_uv.search');
         Route::resource('hors_catalogue', '\App\Http\Controllers\Facturation\HorsCatalogueController');
 
         Route::post('facturation_valide/export_pdf', '\App\Http\Controllers\Facturation\FacturationValideController@export_pdf')->name('facturation_valide.export_pdf');

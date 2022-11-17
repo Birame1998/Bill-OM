@@ -16,37 +16,45 @@
                     @slot('title') Liste recyclage UV @endslot
                 @endcomponent
             </div><!--end col-->
-        </div>
-
-        <!-- end page title end breadcrumb -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="mt-0 header-title"></h4>
+           
+            
+    </div>
+    
+    <!-- end page title end breadcrumb -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="mt-0 header-title"></h4>
                         <div class="row justify-content-center">
                         <div class="col-md-4 mb-4">
-                            {{-- <input type="text" class="form-control" name="nom_partenaire" required> --}}
-                            <div class="input-group">
-                                <input type="text" id="daterange" class="form-control" name="dates" value="{{$dates ?? date('d/m/Y',strtotime( '-1 days' )).' - '.date('d/m/Y',strtotime( '-1 days' )) }}">
-                                <div class="input-group-append">
-                                    <span class="input-group-text"><i class="dripicons-calendar"></i></span>
-                                </div>
+                            <form>
+                                {{-- <input type="text" class="form-control" name="nom_partenaire" required> --}}
+                                <div class="input-group">
+                                    <input type="text" id="daterange" class="form-control" name="dates" value="{{$dates ?? date('d/m/Y',strtotime( '-1 days' )).' - '.date('d/m/Y',strtotime( '-1 days' )) }}">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="dripicons-calendar"></i></span>
+                                    </div>
+                                </div> 
                             </div>
-                        </div>
-                        <div class="col-md-2 mb-6">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-search"></i>
-                            </button> &nbsp;
-                            @if (Route::is('facturation_valide.search') || Route::is('facturation_valide.index'))
+                            <div class="col-md-2 mb-6">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search"></i>
+                                </button> &nbsp; 
+                                @if (Route::is('facturation_valide.search') || Route::is('facturation_valide.index'))
                                 <a href="{{ route('facturation_valide.index') }}" class="btn btn-dark">
                                     <span style="color:white">Tous</span>
                                 </a>
-                            @elseif (Route::is('facturation_envalidation.search') || Route::is('facturation_envalidation.index'))
+                                @elseif (Route::is('facturation_envalidation.search') || Route::is('facturation_envalidation.index'))
                                 <a href="{{ route('facturation_envalidation.index') }}" class="btn btn-dark">
                                     <span style="color:white">Tous</span>
                                 </a>
-                            @endif
+                                @elseif (Route::is('recyclage_uv.search') || Route::is('recyclage_uv.index'))
+                                <a href="{{ route('recyclage_uv.index') }}" class="btn btn-dark">
+                                    <span style="color:white">Tous</span>
+                                </a>   
+                                @endif
+                            </form>
                         </div> </div>
                         <table class="table table-striped table-bordered w-100">
                             <thead>
@@ -74,6 +82,11 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        @if ($recyclage->hasPages())
+                    <div class="pagination-wrapper d-flex justify-content-center">
+                        {{ $recyclage->appends($_GET)->links()}}
+                    </div>
+                    @endif
                     </div>
                 </div>
             </div> <!-- end col -->
