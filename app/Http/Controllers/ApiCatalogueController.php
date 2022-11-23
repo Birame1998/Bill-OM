@@ -17,10 +17,7 @@ class ApiCatalogueController extends Controller
             })->with(['sim_designation'])->orderBy('num_ap','DESC')->get(); 
         if ($catalogue->count()==0) {
             $data = [
-                'error' => [
                     'message' => 'Partenaire non trouvé pour cette sim',
-                    'statusCode' => 404
-                ]
             ];
             return Response::json($data, 404);
         }else{

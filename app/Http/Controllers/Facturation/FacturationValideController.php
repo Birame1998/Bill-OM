@@ -116,17 +116,49 @@ class FacturationValideController extends Controller
 
     public function export_pdf(Request $request)
     {
+        $arr=[];
         if($request->selected_id){
             $mytime = Carbon::now()->format('Ymd-Hi');
 
             if(count($request->selected_id)==1){
-            return $this->exportUnique($request->selected_id);
+                return $this->exportUnique($request->selected_id);
             }
             elseif(count($request->selected_id)!=1){
                 $facture_array = Facturation::where("statut",2)->whereIn("id", $request->selected_id)
-                                    ->distinct('onglet_facturation_id')->pluck('onglet_facturation_id')->toArray();
+                ->distinct('onglet_facturation_id')->pluck('onglet_facturation_id')->toArray();
                 if(count($facture_array)!=1){
-                    return back()->with('error', 'Vous ne pouvez pas exportez des factures de différents onglets');
+                    File::cleanDirectory(public_path("export/"));
+                    foreach($facture_array as $val){
+                        $facture = Facturation::where("statut",2)->whereIn("id", $request->selected_id)
+                        ->where("onglet_facturation_id", $val)->get();
+                        $facture_sum = Facturation::where("statut",2)->whereIn("id", $request->selected_id)
+                                        ->where("onglet_facturation_id", $val)->sum("a_reverser");
+
+                        $data = [
+                            'date' => date('d/m/Y'),
+                            'facture' => $facture,
+                            'facture_sum' => $facture_sum
+                        ];
+                        $pdf = PDF::loadView('Facturation.Facturation.pdf', $data)->setPaper('a4', 'landscape');
+                        $path = public_path("export/");
+                        $onglet_facturation = $this->onglet_facturation[$facture[0]->onglet_facturation_id]['libelle'];
+                        $pdf->save($path.'/'.$onglet_facturation.'_'.$mytime.'.pdf');
+                        // $pdf->download('inv'.$val.'.pdf');
+                    }
+                    $zip = new \ZipArchive();
+                    $fileName = 'export_facture_'.$mytime.'.zip';
+                    $path = public_path('export/').$fileName;
+
+                    if ($zip->open($path, \ZipArchive::CREATE)== TRUE)
+                    {
+                        $files = File::files(public_path('export/'));
+                        foreach ($files as $key => $value){
+                            $relativeName = basename($value);
+                            $zip->addFile($value, $relativeName);
+                        }
+                        $zip->close();
+                    }
+                    return response()->download($path);
                 }
                 else{
                     return $this->exportUnique($request->selected_id);

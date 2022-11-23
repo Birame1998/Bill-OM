@@ -30,21 +30,6 @@ class CatalogueController extends Controller
     {
         $info = $this->userRepo->infoConnect();
         $this->visiteLien($info,"liste catalogue");
-    //    return $catalogue = Catalogue::with(['sim_designation'])->get()
-    //    ->filter(function ($catalogue) {
-    //     return $catalogue->sim_designation->onglet_facturation_id == 5;
-    // })->paginate(15);
-
-//   return  $users = Catalogue::with(array('sim_designation' => function($query)
-//         {
-//     $query->where('onglet_facturation_id', '11');
-// }))->paginate(10);
-//     $onglet_facturation_id=12;
-//    return Catalogue::with('sim_designation')->whereHas('sim_designation',
-//     function($table)use($onglet_facturation_id){
-//         $table->where('onglet_facturation_id',$onglet_facturation_id);
-//     })
-//     ->get();
 if (request('search') && request('search2')==null) {
     $id=0;
     foreach($this->onglet_facturation as $onglet){
@@ -75,11 +60,7 @@ elseif(request('search') && request('search2')){
 else{
     $catalogue = Catalogue::with(['sim_designation'])->orderBy('num_ap','DESC')->paginate(15);
 }
-//dd($catalogue);
-//dd(request('search2'));
 return view('Facturation.Catalogue.index')->with('catalogue',$catalogue);  
-//return view('Facturation.Catalogue.index',compact('catalogue'));  
-//        $catalogue=$this->rechercheCatalogue($nom_partenaire,$onglet)->orderBy('num_ap','DESC')->paginate(15);
     }
 
     /**
@@ -220,6 +201,7 @@ return view('Facturation.Catalogue.index')->with('catalogue',$catalogue);
             session()->flash("message","Le catalogue existe déjà dans le système.");
             return redirect()->route('catalogue.edit', encrypt($catalogue->id));
         }
+        session()->flash("message_success","Partenaire modifié avec succès.");
         return redirect()->route('catalogue.index');
 
     }    

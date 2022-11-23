@@ -20,11 +20,4 @@ class RecyclageUVController extends Controller
         }
         return view('Facturation.Facturation.index_recyclage_uv',compact('recyclage'));
     }
-
-    public function search(Request $request){
-        $recherche = $this->recherche(null,$request->dates);
-        $recyclage = $recherche[0];
-        $dates = $recherche[1];
-        return view('Facturation.Facturation.index_recyclage_uv',compact('recyclage','dates'));
-    }
 }

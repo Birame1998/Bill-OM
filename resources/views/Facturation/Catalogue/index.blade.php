@@ -102,7 +102,7 @@
                             </div>
                         @endcan
                         <br>
-                        <table class="table table-striped table-bordered nowrap">
+                        <table id="datatable-list-catalogue" class="table table-striped table-bordered nowrap">
                             <thead>
                                 <tr>
                                     <th>Num. AP</th>
@@ -134,6 +134,7 @@
                                         <td>
                                             @foreach($value->sim_designation as $val)
                                                @if ($val->identifiant_designation)
+                                               
                                                 <li style="list-style-type: none;">{{ $val->identifiant_designation }}</li>
                                                @endif
                                             @endforeach
@@ -276,9 +277,13 @@
     <script src="{{ URL::asset('plugins/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
     <script src="{{ URL::asset('plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js')}}"></script>
     <script src="{{ URL::asset('assets/pages/jquery.forms-advanced.js')}}"></script>
+    <script src="{{ URL::asset('plugins/datatables/dataTables.buttons.min.js')}}"></script>
+    <script src="{{ URL::asset('plugins/datatables/buttons.html5.min.js')}}"></script>
+    <script src="{{ URL::asset('plugins/datatables/buttons.print.min.js')}}"></script>
+    <script src="{{ URL::asset('plugins/datatables/buttons.colVis.min.js')}}"></script>
     <script src="{{ URL::asset('plugins/tinymce/tinymce.min.js')}}"></script>
     <script src="{{ URL::asset('assets/pages/jquery.form-editor.init.js')}}"></script>
-
+    <script src="{{ URL::asset('plugins/datatables/jquery.dataTables.min.js')}}"></script>
     <script src="{{ URL::asset('plugins/datatables/dataTables.responsive.min.js')}}"></script>
     <script src="{{ URL::asset('plugins/datatables/responsive.bootstrap4.min.js')}}"></script>
     <script src="{{ URL::asset('assets/pages/jquery.datatable.init.js')}}"></script>
@@ -316,4 +321,5 @@
             })
         }
     </script>
+
     @stop

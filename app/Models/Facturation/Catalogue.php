@@ -15,5 +15,5 @@ class Catalogue extends Model
     public function sim_designation()
     {
         return $this->hasMany(CatalogueHasSim::class, 'catalogue_id');
-    }
+    } 
 }

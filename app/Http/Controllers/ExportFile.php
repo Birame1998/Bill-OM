@@ -10,6 +10,7 @@ use App\Models\Facturation\RecyclageUV;
 use Illuminate\Http\Request;
 use App\Models\SuiviReco\ErqAction;
 use Illuminate\Support\Facades\File;
+use Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 
@@ -27,10 +28,12 @@ class ExportFile extends Controller
 
     public function download_file_action(Request $request){
         try{
-            $path = resource_path('c2c_ow\\').$request->file;
+            $path = resource_path('c2c_ow/'.$request->file);
             return response()->download($path);
         } catch (FileNotFoundException $e) {
-            return redirect('/404');
+            session()->flash("message","Le fichier selectionné est introuvable.");
+            $route=url()->previous();
+            return redirect($route);
         }
     }
 

@@ -116,7 +116,21 @@ $(document).ready(function() {
                 exportOptions: {
                     columns: ':visible:not(.action)'
                 }
-            }
+            },
+            {
+                extend: 'csv',
+                title: function () { return $('.page-title').html(); },
+                exportOptions: {
+                    columns: ':visible:not(.action)'
+                }
+            },
+            {
+                extend: 'pdf',
+                title: function () { return $('.page-title').html(); },
+                exportOptions: {
+                    columns: ':visible:not(.action)'
+                }
+            },
         ]
     });
     table_type.buttons().container()
@@ -224,6 +238,37 @@ $(document).ready(function() {
     });
     table_catalogues.buttons().container()
         .appendTo('#datatable-catalogues_wrapper .col-md-6:eq(0)');
+
+
+        var table_list_catalogue = $('#datatable-list-catalogue').DataTable({
+            scrollX: true,
+            scrollCollapse: true,
+            buttons: [
+                {
+                    extend: 'excel',
+                    title: function () { return $('.page-title').html(); },
+                    exportOptions: {
+                        columns: ':visible:not(.action)'
+                    }
+                },
+                {
+                    extend: 'csv',
+                    title: function () { return $('.page-title').html(); },
+                    exportOptions: {
+                        columns: ':visible:not(.action)'
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    title: function () { return $('.page-title').html(); },
+                    exportOptions: {
+                        columns: ':visible:not(.action)'
+                    }
+                },
+            ]
+        });    
+        table_list_catalogue.buttons().container()
+        .appendTo('#datatable-list-catalogue_wrapper .col-md-6:eq(0)');   
     /**DATATABLE ACTIONS END**/
 
     /**DATATABLE FICHES VALIDATION START**/
@@ -284,12 +329,6 @@ $(document).ready(function() {
         .appendTo('#datatable-rapport-revu_wrapper .col-md-6:eq(0)');
     /**DATATABLE RAPPORTS DE REVU END**/
 } );
-
-
-
-
-
-
 
 
 /* Formatting function for row details - modify as you need */

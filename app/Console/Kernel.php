@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('auto:sleeping')->monthly();
+        $schedule->command('auto:reporting')->monthly();
     }
 
     /**
