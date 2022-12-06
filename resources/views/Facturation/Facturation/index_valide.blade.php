@@ -24,12 +24,33 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body table-responsive">
-                        <form class="form-parsley" novalidate="" method="POST" action="/facturation_valide/search">
-                            @csrf
-                            @include("Facturation.Facturation.recherche")
-                        </form>
                         <br>
                         <div class="row justify-content-center">
+                            <form action="">
+                            <div class="input-group">
+                                    <input type="text" id="daterange" class="form-control" name="dates" value="{{$dates ?? date('d/m/Y',strtotime( '-1 days' )).' - '.date('d/m/Y',strtotime( '-1 days' )) }}">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="dripicons-calendar"></i></span>&nbsp;
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-search"></i>
+                                    </button> &nbsp; 
+                                    @if (Route::is('facturation_valide.search') || Route::is('facturation_valide.index'))
+                                    <a href="{{ route('facturation_valide.index') }}" class="btn btn-dark">
+                                        <span style="color:white">Tous</span>
+                                    </a>
+                                    @elseif (Route::is('facturation_envalidation.search') || Route::is('facturation_envalidation.index'))
+                                    <a href="{{ route('facturation_envalidation.index') }}" class="btn btn-dark">
+                                        <span style="color:white">Tous</span>
+                                    </a>
+                                    @elseif (Route::is('recyclage_uv.search') || Route::is('recyclage_uv.index'))
+                                    <a href="{{ route('recyclage_uv.index') }}" class="btn btn-dark">
+                                        <span style="color:white">Tous</span>
+                                    </a>   
+                                    @endif
+                                </div> 
+                            </form>
+                        </div>    
                             <span style="background-color: #50BE87"><strong>{{ $statut_validation[2]['libelle'] }}</strong></span>
                         </div>
                         {{-- <form action="{{ route('facturation_envalidation.store') }}" method="POST"> --}}
@@ -37,11 +58,6 @@
                             @csrf
                             @can('export_facture')
                                 <h4 class="mt-0 header-title"></h4>
-                                @if(session()->has('error'))
-                                    <div class="alert alert-danger" id="message_id" style="width: fit-content;">
-                                        {{ session()->get('error') }}
-                                    </div>
-                                @endif
                                 <div class="pull-right">
                                     <button type="submit" class="btn btn-dark mb-2 mb-lg-3"><i class="fas fa-print"></i>&nbsp;Export PDF</button>
                                 </div>
@@ -65,7 +81,7 @@
                                                             {{$val['libelle']}} ({{$facturation->where('onglet_facturation_id', $val['id'])->count()}})
                                                         </button>
                                                         <input type="checkbox" onclick="caseCocherOutside('{{$val['id']}}')" class="outside" id="select_all_outside{{$val['id']}}">&nbsp;<span class="case{{$val['id']}}" style="font-size:12px">0 ligne(s) cochée(s)</span>
-                                                        (Total transaction: {{number_format($facturation->where('onglet_facturation_id', $val['id'])->sum('transaction_amount'))}})
+                                                        (Total reversements: {{number_format($facturation->where('onglet_facturation_id', $val['id'])->sum('a_reverser'))}})
                                                     </h5>
                                                 </div>
                                                 <div id="collapse{{$val['id']}}" class="collapse" aria-labelledby="heading{{$val['id']}}" data-parent="#accordionExample-faq">
@@ -128,7 +144,7 @@
                                                     @if ($facturation->where('onglet_facturation_id', $val['id'])->count()!=0)
                                                         <input type="checkbox" onclick="caseCocherOutside('{{$val['id']}}')" class="outside" id="select_all_outside{{$val['id']}}">&nbsp;<span class="case{{$val['id']}}" style="font-size:12px">0 ligne(s) cochée(s)</span>
                                                     @endif
-                                                    (Total transaction: {{number_format($facturation->where('onglet_facturation_id', $val['id'])->sum('transaction_amount'))}})
+                                                    (Total reversements: {{number_format($facturation->where('onglet_facturation_id', $val['id'])->sum('a_reverser'))}})
                                                 </h5>
                                             </div>
                                             <div id="collapse{{$val['id']}}" class="collapse" aria-labelledby="heading{{$val['id']}}" data-parent="#accordionExample-faq">
@@ -270,12 +286,7 @@
 @stop
 
 @section('footerScript')
-    <script>
-    $("document").ready(function(){
-    setTimeout(function(){
-    $("#message_id").fadeOut('300')}, 3000 );
-    });
-    </script>
+
     <script src="{{ URL::asset('plugins/moment/moment.js')}}"></script>
     <script src="{{ URL::asset('plugins/daterangepicker/daterangepicker.js')}}"></script>
     <script src="{{ URL::asset('plugins/select2/select2.min.js')}}"></script>

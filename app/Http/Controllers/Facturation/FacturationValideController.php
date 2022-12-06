@@ -35,9 +35,14 @@ class FacturationValideController extends Controller
         // $b = array(19,20,21,22, 23,28,29,30,31,32,33);
         // return $tab = array_diff($ra, $b);
         $info = $this->userRepo->infoConnect();
-        $this->visiteLien($info,"liste facture en validation");
-
-        $facturation = Facturation::where("statut",2)->get();
+        $this->visiteLien($info,"liste factures valides");
+        $facturation = Facturation::where("statut",2)->orderBy('date_transaction','DESC')->get();
+        if (request('dates')!==null) {
+            $dates=request('dates');    
+            $from = Carbon::createFromFormat('d/m/Y',explode("-",preg_replace('/\s+/', '', $dates))[0])->format('Ymd');
+            $to = Carbon::createFromFormat('d/m/Y',explode("-",preg_replace('/\s+/', '', $dates))[1])->format('Ymd');
+            $facturation=Facturation::whereBetween('date_transaction',[$from,$to])->where("statut",2)->orderBy('date_transaction','DESC')->get();   
+        }
         return view('Facturation.Facturation.index_valide',compact('facturation'));
     }
 

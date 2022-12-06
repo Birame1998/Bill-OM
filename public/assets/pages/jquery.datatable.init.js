@@ -331,6 +331,27 @@ $(document).ready(function() {
 } );
 
 
+var table_catalogue = $('#datatable-catalogue').DataTable({
+    scrollX: false,
+    scrollCollapse: false,
+    searching:false,
+    paging:false,
+    info:false,
+    dom:'Bfrtip',
+    buttons: [
+        {
+            extend: 'excel',
+            title: function () { return $('.page-title').html(); },
+            className:'btn btn-primary mb-2 mb-lg-3'
+        },
+    ],
+    order: [[0,'desc']],
+    
+});
+table_catalogue.buttons().container()
+    .appendTo('#datatable-catalogue_wrapper .col-md-7:eq(0)');
+
+
 /* Formatting function for row details - modify as you need */
 // function format ( d ) {
 //     // `d` is the original data object for the row

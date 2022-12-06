@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\Facturation;
 
-use DateTime;
+use DB;
 
+use DateTime;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\PDF;
-use Illuminate\Http\Request;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
 use App\Models\Facturation\Facturation;
-use DB;
+use App\Models\GestionStructure\Tracking;
+use App\Support\Authorization\AuthorizationUserTrait;
 
 class FacturationValidationController extends Controller
 {
@@ -31,13 +33,22 @@ class FacturationValidationController extends Controller
     {
         $info = $this->userRepo->infoConnect();
         $this->visiteLien($info,"liste facture en validation");
-        $yesterday=date("Ymd", strtotime("yesterday"));
+        //$yesterday=date("Ymd", strtotime("yesterday"));
         //dd($yesterday);
-        $facturation = Facturation::select('*')
-        ->where('statut',1)
-        ->get();
+        $facturation = Facturation::where('statut',1)->take(1000)->get();
+        if (request('dates')!==null && request('nom_partenaire')==null) {
+            $dates=request('dates');    
+            $from = Carbon::createFromFormat('d/m/Y',explode("-",preg_replace('/\s+/', '', $dates))[0])->format('Ymd');
+            $to = Carbon::createFromFormat('d/m/Y',explode("-",preg_replace('/\s+/', '', $dates))[1])->format('Ymd');
+            $facturation=Facturation::whereBetween('date_transaction',[$from,$to])->where("statut",1)->orderBy('date_transaction','DESC')->get();   
+        }elseif(request('dates')!==null && request('nom_partenaire')!==null){
+            $dates=request('dates');    
+            $nom_partenaire=request('nom_partenaire');
+            $from = Carbon::createFromFormat('d/m/Y',explode("-",preg_replace('/\s+/', '', $dates))[0])->format('Ymd');
+            $to = Carbon::createFromFormat('d/m/Y',explode("-",preg_replace('/\s+/', '', $dates))[1])->format('Ymd');
+            $facturation=Facturation::whereBetween('date_transaction',[$from,$to])->where("statut",1)->where("nom_partenaire",$nom_partenaire)->orderBy('date_transaction','DESC')->get();   
+        }
         //(date('m/d/Y',strtotime("-39 days"))==$facturation[0]->date_transaction);
-        //dd($facturation);
         return view('Facturation.Facturation.index_envalidation',compact('facturation'));
     }
 
@@ -129,7 +140,6 @@ class FacturationValidationController extends Controller
         $onglet_facturation = $this->onglet_facturation[$facturation->onglet_facturation_id]['libelle'];
         return response()->json(['data' => $facturation, "onglet_facturation" => $onglet_facturation]);
     }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -138,9 +148,12 @@ class FacturationValidationController extends Controller
      */
     public function edit($id)
     {
-        //
+        $info = $this->userRepo->infoConnect();
+        $this->visiteLien($info,"modification facturation en validation");
+        $facturation = Facturation::where('id', decrypt($id))->first();
+        return view('Facturation.Facturation.update_envalidation', compact('facturation'));
     }
-
+    
     /**
      * Update the specified resource in storage.
      *
@@ -148,11 +161,38 @@ class FacturationValidationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,Facturation $facturation,$id)
     {
-        //
-    }
+        $info = $this->userRepo->infoConnect();
+        $facturation = Facturation::where('id',$id)->first();
+        try {
+            $facturation->update([
+                'num_ap' => $request->num_ap,
+                'nom_partenaire' => $request->nom_partenaire,
+                'transaction_amount' => $request->transaction_amount,
+                'commission' => $request->commission,
+                'a_reverser' => $request->transaction_amount-$request->commission,
+                'sim_head' => $request->sim_head,
+                'created_by' => $info,
+            ]);
+            Tracking::create([
+                'user' => $info,
+                'action' => "a modifié une ancienne facturation num_ap: ".$facturation->num_ap." ,nom_partenaire: ".
+                $facturation->nom_partenaire." ,transaction_amount: ".$facturation->transaction_amount.
+                " ,commission: ".$facturation->commission." ,a_reverser: ".$facturation->a_reverser.
+                " ,sim_head: ".$facturation->sim_head,
+                'ip_machine' => request()->ip(),
+                'url' => url()->current()
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            session()->flash("message","La facturation existe déjà dans le système.");
+            return redirect()->route('facturation.edit', encrypt($facturation->id));
+        }
+        session()->flash("message_success","Facturation modifiée avec succès.");
+        return redirect()->route('facturation_envalidation.index');
+    }    
 
+    
     /**
      * Remove the specified resource from storage.
      *

@@ -37,7 +37,7 @@ class ComptesDormantsController extends Controller
                 array_push($cpt,$fact->nom_partenaire);
             }
         }
-       $partenaires=Catalogue::with(['sim_designation'])->whereBetween('nom_partenaire',$cpt)->orderBy('num_ap','desc')->paginate(15);
+       $partenaires=Catalogue::with(['sim_designation'])->whereIn('nom_partenaire',$cpt)->orderBy('num_ap','desc')->paginate(15);
        return view('Facturation.Dormant.index',compact('partenaires'));
     }
 

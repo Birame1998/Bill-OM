@@ -3,7 +3,9 @@
 use App\RoleSeeder;
 use App\UserSeeder;
 use App\PermissionSeeder;
+use App\HorsCatalogueSeeder;
 use Illuminate\Database\Seeder;
+use Database\Seeders\CatalogueSeeder;
 
 
 class DatabaseSeeder extends Seeder
@@ -22,6 +24,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             StructureSeeder::class,
             CatalogueSeeder::class,
+            FacturationSeeder::class
 		]);
 	}
 

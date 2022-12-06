@@ -30,6 +30,6 @@ class TrackingTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('tracking');
     }
 }

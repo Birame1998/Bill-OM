@@ -32,6 +32,7 @@ Route::group(['middleware' => 'preventBackHistory'],function(){
         // GESTION ACCES
         //Route::resource('permissions', '\App\Http\Controllers\Securite\PermissionController');
         Route::resource('catalogue', '\App\Http\Controllers\Facturation\CatalogueController'); 
+        Route::resource('dashboard', '\App\Http\Controllers\DashboardController'); 
         Route::group(['middleware' => ['role:Super Admin']], function () {
             Route::resource('permissions', '\App\Http\Controllers\Securite\PermissionController');    
             Route::resource('users', '\App\Http\Controllers\Securite\UserController');
@@ -50,6 +51,8 @@ Route::group(['middleware' => 'preventBackHistory'],function(){
         Route::post('facturation_valide/search', '\App\Http\Controllers\Facturation\FacturationValideController@search')->name('facturation_valide.search');
         
         Route::resource('facturation_rejetee', '\App\Http\Controllers\Facturation\FacturationRejeteController');
+        Route::post('facturation_rejetee/search', '\App\Http\Controllers\Facturation\FacturationRejeteController@search')->name('facturation_rejetee.search');
+        
         Route::resource('recyclage_uv', '\App\Http\Controllers\Facturation\RecyclageUVController');
         Route::post('recyclage_uv/search', '\App\Http\Controllers\Facturation\RecyclageUVController@search')->name('recyclage_uv.search');
         Route::resource('hors_catalogue', '\App\Http\Controllers\Facturation\HorsCatalogueController');

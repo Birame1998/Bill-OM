@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Http;
 use App\Models\Facturation\Catalogue;
 use App\Models\GestionStructure\Tracking;
 use App\Models\Facturation\CatalogueHasSim;
-use App\Http\Request\Facturation\CatalogueRequest;
 
 class CatalogueController extends Controller
 {

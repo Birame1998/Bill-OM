@@ -23,9 +23,56 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body table-responsive">
-                        <form class="form-parsley" novalidate="" method="POST" action="/facturation_envalidation/search">
-                            @csrf
-                            @include("Facturation.Facturation.recherche")
+                        <form action="">
+        
+                        <div class="row justify-content-center">
+                            <div class="input-group w-25 justify-content-center" name="nom_partenaire">
+                              <select class="select2 form-control mb-3" style="width: 100%; height:36px;" name="nom_partenaire" data-column="0">
+                                  @if(isset($nom_partenaire))
+                                  <option value="">Nom partenaire</option>
+                                  @forelse ($partenaires as $value)
+                                  @if ($value->id== $nom_partenaire)
+                                  <option value="{{$value->nom_partenaire}}" selected>{{$value->nom_partenaire}}</option>
+                                  @else
+                                  <option value="{{$value->nom_partenaire}}">{{$value->nom_partenaire}}</option>
+                                  @endif
+                                  @empty
+                                  <option value="">Aucun partenaire disponible</option>
+                                  @endforelse
+                                  @else
+                                  <option value="" selected>Nom partenaire</option>
+                                  @forelse ($partenaires as $value)
+                                  <option value="{{$value->nom_partenaire}}">{{$value->nom_partenaire}}</option>
+                                  @empty
+                                  <option value="">Aucun partenaire disponible</option>
+                                  @endforelse
+                                  @endif
+                              </select>
+                          </div>
+                                    <div class="input-group w-25 justify-content-center ml-5">
+                                    <input type="text" id="daterange" class="form-control" name="dates" value="{{$dates ?? date('d/m/Y',strtotime( '-1 days' )).' - '.date('d/m/Y',strtotime( '-1 days' )) }}">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="dripicons-calendar"></i></span>&nbsp;
+                                    </div>&nbsp;
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-search"></i>
+                                    </button> &nbsp; 
+                                    @if (Route::is('facturation_valide.search') || Route::is('facturation_valide.index'))
+                                    <a href="{{ route('facturation_valide.index') }}" class="btn btn-dark">
+                                        <span style="color:white">Tous</span>
+                                    </a>
+                                    @elseif (Route::is('facturation_envalidation.search') || Route::is('facturation_envalidation.index'))
+                                    <a href="{{ route('facturation_envalidation.index') }}" class="btn btn-dark">
+                                        <span style="color:white">Tous</span>
+                                    </a>
+                                    @elseif (Route::is('recyclage_uv.search') || Route::is('recyclage_uv.index'))
+                                    <a href="{{ route('recyclage_uv.index') }}" class="btn btn-dark">
+                                        <span style="color:white">Tous</span>
+                                    </a>   
+                                    @endif
+                                </div> 
+                            </div>    
+                            
                         </form>
                         <br>
                         <form action="" method="POST" id="valide_rejet">
@@ -111,7 +158,7 @@
                                                         @can("validation_facture")
                                                             <input type="checkbox" onclick="caseCocherOutside('{{$val['id']}}')" class="outside" id="select_all_outside{{$val['id']}}">&nbsp;<span class="case{{$val['id']}}" style="font-size:12px">0 ligne(s) cochée(s)</span>
                                                         @endcan
-                                                        (Total transaction: {{number_format($facturation->where('onglet_facturation_id', $val['id'])->sum('transaction_amount'))}})
+                                                        (Total reversements: {{number_format($facturation->where('onglet_facturation_id', $val['id'])->sum('a_reverser'))}})
                                                     </h5>
                                                 </div>
                                                 <div id="collapse{{$val['id']}}" class="collapse" aria-labelledby="heading{{$val['id']}}" data-parent="#accordionExample-faq">
@@ -149,7 +196,7 @@
                                                                             <td>{{ number_format($facture->transaction_amount, 2, ","," ") }}</td>
                                                                             <td>{{ number_format($facture->commission, 2, ","," " )}}</td>
                                                                             <td>{{ number_format($facture->a_reverser, 2, ","," " ) }}</td>
-                                                                            <td>{{ $facture->date_transaction }}</td>
+                                                                            <td>{{  date('d/m/Y', strtotime($facture->date_transaction)) }}</td>
                                                                             <td align ="center">
                                                                                 @can("validation_facture")
                                                                                     <a href="#" data-toggle="modal" data-target="#ValiderUnique" onclick="ValidationUnique('{{$facture->id}}')" class="mr-1"><i class="fas fa-check-circle text-vert font-16"></i></a>
@@ -182,7 +229,7 @@
                                                             <input type="checkbox" onclick="caseCocherOutside('{{$val['id']}}')" class="outside" id="select_all_outside{{$val['id']}}">&nbsp;<span class="case{{$val['id']}}" style="font-size:12px">0 ligne(s) cochée(s)</span>
                                                         @endif
                                                     @endcan
-                                                    (Total transaction: {{number_format($facturation->where('onglet_facturation_id', $val['id'])->sum('transaction_amount'))}})
+                                                    (Total reversements: {{number_format($facturation->where('onglet_facturation_id', $val['id'])->sum('a_reverser'))}})
                                                 </h5>
                                             </div>
                                             <div id="collapse{{$val['id']}}" class="collapse" aria-labelledby="heading{{$val['id']}}" data-parent="#accordionExample-faq">
@@ -218,10 +265,13 @@
                                                                         <td>{{ number_format($facture->transaction_amount, 2, ","," ") }}</td>
                                                                         <td>{{ number_format($facture->commission, 2, ","," " )}}</td>
                                                                         <td>{{ number_format($facture->a_reverser, 2, ","," " ) }}</td>
-                                                                        <td>{{ $facture->date_transaction }}</td>
+                                                                        <td>{{  date('d/m/Y', strtotime($facture->date_transaction)) }}</td>
                                                                         <td align ="center">
                                                                             @can("validation_facture")
                                                                                 <a href="#" data-toggle="modal" data-target="#ValiderUnique" onclick="ValidationUnique('{{$facture->id}}')" class="mr-1"><i class="fas fa-check-circle text-vert font-16"></i></a>
+                                                                            @endcan
+                                                                            @can("modification_facture")
+                                                                            <a href="{{route('facturation_envalidation.edit', encrypt($facture->id))}}" class="mr-1"><i class="fas fa-edit text-info font-14"></i></a>
                                                                             @endcan
                                                                             @can("rejet_facture")
                                                                                 <a href="#" data-toggle="modal" data-target="#RejetUnique" onclick="RejetUnique('{{$facture->id}}')" class="mr-1"><i class="fas fa-times-circle text-danger font-16"></i></a>

@@ -14,7 +14,7 @@ class FacturationSeeder extends Seeder
     public function run()
     {
         $read = new GestionFile();
-        $fileFacture = resource_path('data\facturation.csv');
+        $fileFacture = resource_path('data/facturation.csv');
         $facture = $read->csvToArrayStructure($fileFacture);
         for ($i = 0; $i<count($facture); $i++)
         {

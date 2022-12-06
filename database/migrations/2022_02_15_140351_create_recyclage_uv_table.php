@@ -28,6 +28,6 @@ class CreateRecyclageUVTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hors_catalogue');
+        Schema::dropIfExists('recyclage_uv');
     }
 }

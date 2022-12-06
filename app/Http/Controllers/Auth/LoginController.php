@@ -71,7 +71,7 @@ class LoginController extends Controller
                             'date_login' => null,
                             'tentative' => null
                         ]);
-                        return redirect()->intended('catalogue');
+                        return redirect()->intended('dashboard');
                     }
                  }
                 elseif($compte->is_active!=1){

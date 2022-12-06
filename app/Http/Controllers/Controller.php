@@ -67,7 +67,8 @@ class Controller extends BaseController
         15 => array('id' => 15, 'libelle' => 'Sonatel mobile'),
         16 => array('id' => 16, 'libelle' => 'Soxla Paydunya'),
         17 => array('id' => 17, 'libelle' => 'Woyofal'),
-        18 => array('id' => 18, 'libelle' => 'Promobile')
+        18 => array('id' => 18, 'libelle' => 'Promobile'),
+        19 => array('id' => 19, 'libelle' => 'Sonatel')
     );
 
     public $statut_validation = array(
