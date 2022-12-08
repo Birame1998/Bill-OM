@@ -27,27 +27,21 @@
                         <form class="form-parsley" novalidate="" method="POST" action="{{ route('catalogue.store') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="form-row">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="validationCustom01">Numéro AP</label>
                                     <input type="number" class="form-control" name="num_ap" min="0" required>
                                 </div><!--end col-->
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="directeur_id">Nom partenaire</label>
                                     <input type="text" class="form-control" name="nom_partenaire" required>
                                 </div><!--end col-->
-                            </div>
-                            <div class="form-row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="my-2">Compte bancaire</label>
+                                <div class="col-md-3 mb-3">
+                                    <label for="compte_bancaire">Compte bancaire</label>
                                     <input type="text" class="form-control" name="compte_bancaire" autocomplete="off" required>
-                                </div><!--end col-->
-                                <div class="col-md-6 mb-3">
-                                    <label for="validationCustom05" class="my-2">Taux commission</label>
-                                    <input type="number" step="any" min="0" class="form-control" name="taux_commission" required>
                                 </div><!--end col-->
                             </div><!--end form-row-->
                             <div class="form-row">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-3 mb-3">
                                     <label for="type_action_id" class="my-2">Type de partenaire</label>
                                     <select class="form-control mb-3 custom-select" name="type_partenaire_id" required>
                                         <option value="">Choisir un type de partenaire</option>
@@ -58,7 +52,7 @@
                                         @endforelse
                                     </select>
                                 </div><!--end col-->
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-3 mb-3">
                                     <label for="validationCustom05" class="my-2">Inclure</label>
                                     <select class="form-control mb-3 custom-select" name="inclure_id" required>
                                         <option value="">Choisir</option>
@@ -69,8 +63,6 @@
                                         @endforelse
                                     </select>
                                 </div><!--end col-->
-                            </div>
-                            <div class="form-row">
                                 <div class="col-md-6 mb-3">
                                     <label>Mode de reversement</label>
                                     <select class="form-control mb-3 custom-select" name="mode_reversement_id" required>
@@ -98,7 +90,7 @@
                                                 <label class="control-label">Identifiant désignation</label>
                                                 <input type="text" name="car[0][id_designation]" class="form-control">
                                             </div><!--end col-->
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-2 mb-3">
                                                 <label class="control-label">Onglet facturation</label>
                                                 <select class="form-control custom-select" name="car[0][onglet_facturation_id]" required>
                                                     <option value="">Choisir un onglet</option>
@@ -109,7 +101,7 @@
                                                     @endforelse
                                                 </select>
                                             </div><!--end col-->
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-2 mb-3">
                                                 <label for="validationCustom05" class="control-label">Blacklist C2C</label>
                                                 <select class="form-control custom-select" name="car[0][blacklist_c2c]" required>
                                                     <option value="">Choisir</option>
@@ -119,6 +111,10 @@
                                                         <option value="">Aucune donnée disponible</option>
                                                     @endforelse
                                                 </select>
+                                            </div><!--end col-->
+                                            <div class="col-md-2 mb-3">
+                                                <label for="validationCustom05" class="my-2">Taux commission</label>
+                                                <input type="number" step="any" min="0" class="form-control" name="car[0][taux_commission]" required>
                                             </div><!--end col-->
                                             <div class="col-md-1" style="margin-bottom: 1.2rem !important; padding-left: 25px;">
                                                 <span data-repeater-delete="" class="btn btn-gradient-danger supprimer">

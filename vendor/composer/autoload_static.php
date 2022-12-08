@@ -209,6 +209,8 @@ class ComposerStaticInit06ac59b61f3ef70998309a273bf7f12e
             'Doctrine\\Common\\' => 16,
             'Dflydev\\DotAccessData\\' => 22,
             'DeepCopy\\' => 9,
+            'Database\\Seeders\\' => 17,
+            'Database\\Factories\\' => 19,
         ),
         'C' => 
         array (
@@ -646,6 +648,14 @@ class ComposerStaticInit06ac59b61f3ef70998309a273bf7f12e
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
+        'Database\\Seeders\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/database/seeders',
+        ),
+        'Database\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/database/factories',
+        ),
         'Cron\\' => 
         array (
             0 => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron',
@@ -722,6 +732,7 @@ class ComposerStaticInit06ac59b61f3ef70998309a273bf7f12e
 
     public static $classMap = array (
         'AddCommentaireToCatalogueTable' => __DIR__ . '/../..' . '/database/migrations/2022_10_25_085454_add_commentaire_to_catalogue_table.php',
+        'AddTauxCommissionToCatalogueHasSimTable' => __DIR__ . '/../..' . '/database/migrations/2022_12_08_092424_add_taux_commission_to_catalogue_has_sim_table.php',
         'App\\Classes\\GestionFile' => __DIR__ . '/../..' . '/app/Classes/GestionFile.php',
         'App\\Console\\Commands\\SleepingAccount' => __DIR__ . '/../..' . '/app/Console/Commands/SleepingAccount.php',
         'App\\Console\\Commands\\TaskRapportControle' => __DIR__ . '/../..' . '/app/Console/Commands/TaskRapportControle.php',

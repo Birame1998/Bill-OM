@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'AddCommentaireToCatalogueTable' => $baseDir . '/database/migrations/2022_10_25_085454_add_commentaire_to_catalogue_table.php',
+    'AddTauxCommissionToCatalogueHasSimTable' => $baseDir . '/database/migrations/2022_12_08_092424_add_taux_commission_to_catalogue_has_sim_table.php',
     'App\\Classes\\GestionFile' => $baseDir . '/app/Classes/GestionFile.php',
     'App\\Console\\Commands\\SleepingAccount' => $baseDir . '/app/Console/Commands/SleepingAccount.php',
     'App\\Console\\Commands\\TaskRapportControle' => $baseDir . '/app/Console/Commands/TaskRapportControle.php',

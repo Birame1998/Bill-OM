@@ -90,7 +90,6 @@ return view('Facturation.Catalogue.index')->with('catalogue',$catalogue);
                 'nom_partenaire' => $request->nom_partenaire,
                 'type_partenaire_id' => $request->type_partenaire_id,
                 'inclure_id' => $request->inclure_id,
-                'taux_commission' => $request->taux_commission,
                 'compte_bancaire' => $request->compte_bancaire,
                 'mode_reversement_id' => $request->mode_reversement_id,
                 'commentaire' => $request->commentaire,
@@ -102,6 +101,7 @@ return view('Facturation.Catalogue.index')->with('catalogue',$catalogue);
                     'catalogue_id' => $catalogue->id,
                     'sim_head' => $req['sim_head'],
                     'identifiant_designation' => $req['id_designation'],
+                    'taux_commission' => $req['taux_commission'],
                     'onglet_facturation_id' => $req['onglet_facturation_id'],
                     'blacklist_c2c' => $req['blacklist_c2c']
                 ]);
@@ -162,7 +162,6 @@ return view('Facturation.Catalogue.index')->with('catalogue',$catalogue);
                 'nom_partenaire' => $request->nom_partenaire,
                 'type_partenaire_id' => $request->type_partenaire_id,
                 'inclure_id' => $request->inclure_id,
-                'taux_commission' => $request->taux_commission,
                 'compte_bancaire' => $request->compte_bancaire,
                 'commentaire' => $request->commentaire,
                 'mode_reversement_id' => $request->mode_reversement_id,
@@ -174,6 +173,7 @@ return view('Facturation.Catalogue.index')->with('catalogue',$catalogue);
             {
                 CatalogueHasSim::create([
                     'catalogue_id' => $catalogue->id,
+                    'taux_commission' => $req['taux_commission'],
                     'sim_head' => $req['sim_head'],
                     'identifiant_designation' => $req['id_designation'],
                     'onglet_facturation_id' => $req['onglet_facturation_id'],

@@ -42,10 +42,6 @@
                                     <label class="my-2">Compte bancaire</label>
                                     <input type="text" class="form-control" name="compte_bancaire" value="{{ $catalogue->compte_bancaire }}" required>
                                 </div><!--end col-->
-                                <div class="col-md-6 mb-3">
-                                    <label for="validationCustom05" class="my-2">Taux commission</label>
-                                    <input type="number"  step="any" min="0" class="form-control" name="taux_commission" value="{{ $catalogue->taux_commission }}" required>
-                                </div><!--end col-->
                             </div><!--end form-row-->
                             <div class="form-row">
                                 <div class="col-md-6 mb-3">
@@ -97,7 +93,7 @@
                                 </div><!--end col--> --}}
                                 <div class="col-md-6 mb-3">
                                     <label>Mode de reversement</label>
-                                    <select class="form-control mb-3 custom-select" style="width: 100%; height:36px;" name="mode_reversement_id" required>
+                                    <select class="form-control mb-3 custom-select" style="width: 100%; height:30px;" name="mode_reversement_id" required>
                                         @forelse ($mode_reversement as $value)
                                             @if ($value['id']==$catalogue->mode_reversement_id)
                                         <option value="{{ $value['id'] }}" {{ (($value['libelle']) == 'Reversement classique') ? 'selected' : '' }} >{{ $value['libelle'] }}</option>
@@ -127,7 +123,7 @@
                                                     <label class="control-label">Identifiant désignation</label>
                                                     <input type="text" name="car[{{$loop->iteration-1}}][id_designation]" value="{{ $val->identifiant_designation }}" class="form-control">
                                                 </div><!--end col-->
-                                                <div class="col-md-3 mb-3">
+                                                <div class="col-md-2 mb-3">
                                                     <label class="control-label">Onglet facturation</label>
                                                     <select class="form-control custom-select" name="car[{{$loop->iteration-1}}][onglet_facturation_id]" required>
                                                         <option value="">Choisir un onglet</option>
@@ -142,7 +138,7 @@
                                                         @endforelse
                                                     </select>
                                                 </div><!--end col-->
-                                                <div class="col-md-3 mb-3">
+                                                <div class="col-md-2 mb-3">
                                                     <label for="validationCustom05" class="control-label">Blacklist C2C</label>
                                                     <select class="form-control custom-select" name="car[{{$loop->iteration-1}}][blacklist_c2c]" required>
                                                         <option value="">Choisir</option>
@@ -157,6 +153,10 @@
                                                             <option value="">Aucune donnée disponible</option>
                                                         @endforelse
                                                     </select>
+                                                </div><!--end col-->
+                                                <div class="col-md-2 mb-3">
+                                                    <label for="validationCustom05" class="my-2">Taux commission</label>
+                                                    <input type="number"  step="any" min="0" class="form-control" name="taux_commission" value="{{ $val->taux_commission }}" required>
                                                 </div><!--end col-->
                                                 <div class="col-md-1" style="margin-bottom: 1.2rem !important; padding-left: 25px;">
                                                     <span data-repeater-delete="" id="supprimer{{$loop->iteration-1}}" class="btn btn-gradient-danger">

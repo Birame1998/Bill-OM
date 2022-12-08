@@ -140,7 +140,11 @@
                         </td>
                         <td>{{ $type_partenaire[$value->type_partenaire_id]['libelle'] }}</td>
                         <td>{{ $inclure[$value->inclure_id]['libelle'] }}</td>
-                        <td>{{ $value->taux_commission }}</td>
+                        <td>
+                            @foreach($value->sim_designation as $val)
+                            <li style="list-style-type: none;">{{ $val->taux_commission }}</li>
+                            @endforeach
+                        </td>
                         <td>
                             @foreach($value->sim_designation as $val)
                             @if ($val->identifiant_designation)
@@ -197,32 +201,29 @@
                 <table class="table table-striped table-bordered">
                     <tbody>
                         <tr>
-                            <td colspan="4" style="text-align: center;background-color: #f79240;color: white;">
+                            <td colspan="5" style="text-align: center;background-color: #f79240;color: white;">
                                 Nom du partenaire : <strong id="nom_partenaire"></strong>
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row" colspan="3">Numéro AP</th>
+                            <th scope="row" colspan="4">Numéro AP</th>
                             <td id="num_ap"></td>
                         </tr>
                         <tr>
-                            <th scope="row" colspan="3">Type de partenaire</th>
+                            <th scope="row" colspan="4">Type de partenaire</th>
                             <td id="type"></td>
                         </tr>
                         <tr>
-                            <th scope="row" colspan="3">Inclure</th>
+                            <th scope="row" colspan="4">Inclure</th>
                             <td id="inclure"></td>
                         </tr>
                         <tr>
-                            <th scope="row" colspan="3">Taux de commission</th>
-                            <td id="taux"></td>
-                        </tr>
-                        <tr>
-                        <tr rowspan="3">
+                        <tr rowspan="4">
                             <th scope="row">Sim head</th>
                             <th scope="row">Identifiant désignation</th>
                             <th scope="row">Onglet facturation</th>
                             <th scope="row">Blacklist C2C</th>
+                            <th scope="row">Taux Commission</th>
                         </tr>
                         </tr>
                         <tr>
@@ -238,13 +239,16 @@
                             <td>
                                 <ul id="blacklist_c2c" style="list-style-type:none;padding-left: 0px;margin-bottom:0px"></ul>
                             </td>
+                            <td>
+                                <ul id="taux_commission" style="list-style-type:none;padding-left: 0px;margin-bottom:0px"></ul>
+                            </td>
                         </tr>
                         <tr>
-                            <th scope="row" colspan="3">Compte bancaire</th>
+                            <th scope="row" colspan="4">Compte bancaire</th>
                             <td id="compte_bancaire"></td>
                         </tr>
                         <tr>
-                            <th scope="row" colspan="3">Mode reversement</th>
+                            <th scope="row" colspan="4">Mode reversement</th>
                             <td id="mode_reversement"></td>
                         </tr>
 
@@ -349,15 +353,14 @@
             for (var i = 0; i < valeur.blacklist_c2c.length; i++) {
                 $('#blacklist_c2c').append('<li class="blacklist_c2c">' + valeur.blacklist_c2c[i]['blacklist_c2c'] + '</li>')
             }
+            $('.taux_commission').remove()
+            for (var i = 0; i < valeur.data.sim_designation.length; i++) {
+                $('#taux_commission').append('<li class="sim_head">' + valeur.data.sim_designation[i].taux_commission + '</li>')
+            }
         })
     }
 
-    // $(document).ready(function() {
-    //     $('#datatable-catalogue').DataTable({
-    //         order: [
-    //             [0, 'desc']
-    //         ],
-    //     });
-    // });
+
+
 </script>
 @stop
