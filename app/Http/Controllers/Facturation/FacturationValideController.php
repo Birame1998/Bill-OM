@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
 use App\Models\Facturation\Catalogue;
+use App\Models\Facturation\CatalogueHasSim;
 use App\Models\Facturation\Facturation;
 use Illuminate\Support\Facades\Storage;
 
@@ -88,14 +89,52 @@ class FacturationValideController extends Controller
             $mytime = Carbon::now()->format('Ymd-Hi');
             $facture = Facturation::where("statut",2)->whereIn("id", $selected_id)->get();
             $facture_sum = Facturation::where("statut",2)->whereIn("id", $selected_id)->sum("a_reverser");
-            $data = [
-                'date' => date('m/d/Y'),
-                'facture' => $facture,
-                'facture_sum' => $facture_sum
-            ];
+            $onglet_facturation = $this->onglet_facturation[$facture[0]->onglet_facturation_id]['libelle'];
+            $factBool=$onglet_facturation!='PTUPS' && $onglet_facturation!='Sonatel mobile';
+            if ($factBool) {
+                $data = [
+                    'date' => date('d/m/Y'),
+                    'facture' => $facture,
+                    'facture_sum' => $facture_sum,
+                    'factBool' => $factBool,
+                ];
+            }else{
+                $pillArray=[];
+                $piArray=[];
+                $ptups=[];
+                $catalogueHasSim= CatalogueHasSim::whereIn('onglet_facturation_id',[12,15])->get();
+                foreach($catalogueHasSim as $chs){
+                  if ($chs->identifiant_designation=='MPAYACHATPASS') {
+                    array_push($pillArray,$chs->sim_head);
+                  } 
+                  if ($chs->identifiant_designation=='ACHATPASS') {
+                    array_push($piArray,$chs->sim_head);
+                  }
+                  if ($chs->identifiant_designation=='PTUPS') {
+                    array_push($ptups,$chs->sim_head);
+                  }  
+                }
+                $facturePi=$facture->whereIn('sim_head',$piArray);
+                $facture_pi_sum=$facturePi->sum('a_reverser');
+                $facturePill=$facture->whereIn('sim_head',$pillArray);
+                $facture_pill_sum=$facturePi->sum('a_reverser');
+                $facturePtups=$facture->whereIn('sim_head',$ptups);
+                $facture_ptups_sum=$facturePtups->sum('a_reverser');
+                $data = [
+                    'date' => date('d/m/Y'),
+                    'facture' => $facture,
+                    'facturePi' => $facturePi,
+                    'facturePill' => $facturePill,
+                    'facturePtups' => $facturePtups,
+                    'facture_sum' => $facture_sum,
+                    'facture_pi_sum' => $facture_pi_sum,
+                    'facture_pill_sum' => $facture_pill_sum,
+                    'facture_ptups_sum' => $facture_ptups_sum,
+                    'factBool' => $factBool,
+                ];
+            } 
             $pdf = PDF::loadView('Facturation.Facturation.pdf', $data)->setPaper('a4', 'landscape');
             // $path = public_path("export\\");
-            $onglet_facturation = $this->onglet_facturation[$facture[0]->onglet_facturation_id]['libelle'];
             // $pdf->save($path.'/'.'invoice1.pdf');
             return $pdf->download($onglet_facturation.'_'.$mytime.'.pdf');
 
@@ -137,12 +176,12 @@ class FacturationValideController extends Controller
                         $facture = Facturation::where("statut",2)->whereIn("id", $request->selected_id)
                         ->where("onglet_facturation_id", $val)->get();
                         $facture_sum = Facturation::where("statut",2)->whereIn("id", $request->selected_id)
-                                        ->where("onglet_facturation_id", $val)->sum("a_reverser");
-
+                                        ->where("onglet_facturation_id", $val)->sum("a_reverser");                                                                      
                         $data = [
                             'date' => date('d/m/Y'),
                             'facture' => $facture,
-                            'facture_sum' => $facture_sum
+                            'facture_sum' => $facture_sum,
+                            'onglet_facturation'=>$val
                         ];
                         $pdf = PDF::loadView('Facturation.Facturation.pdf', $data)->setPaper('a4', 'landscape');
                         $path = public_path("export/");

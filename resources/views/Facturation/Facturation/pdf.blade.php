@@ -35,6 +35,7 @@
                     <th style="color: #f5d9c2;">N° COMPTE BANCAIRE</th>
                 </tr>
             </thead>
+            @if ($factBool)
             <tbody>
                 @foreach ($facture as $val)
                     <tr>
@@ -48,12 +49,85 @@
                         <td>{{$val->compte_bancaire}}</td>
                     </tr>
                 @endforeach
+            @else
+                @forelse($facturePill as $val)
+                    <tr>
+                        <td>{{ date('d/m/Y', strtotime($val->date_transaction)) }}</td>
+                        <td>{{$val->num_ap}}</td>
+                        <td>{{$val->nom_partenaire}}</td>
+                        <td>{{ $onglet_facturation[$val->onglet_facturation_id]['libelle'] }}</td>
+                        <td style="text-align: right">{{ number_format($val->transaction_amount, 2, ","," ") }}</td>
+                        <td style="text-align: right">{{ number_format($val->commission, 2, ","," " )}}</td>
+                        <td style="text-align: right">{{ number_format($val->a_reverser, 2, ","," " ) }}</td>
+                        <td>{{$val->compte_bancaire}}</td>
+                    </tr>
+                    @empty
+                    <tr>PAS DE FACTURE DISPONIBLE</tr>
+                    @endforelse    
+                    <tr>
+                        <td colspan="6" style="text-align: center;background-color:#948a54;border: 1px solid black"><b>SOUS-TOTAL PASS ILLIMIX</b></td>
+                        <td style="text-align: right"><b>{{ number_format($facture_pill_sum, 2, ","," " ) }}</b></td>
+                        <td></td>
+                    </tr>
+                    @forelse($facturePi as $val)
+                    <tr>
+                        <td>{{ date('d/m/Y', strtotime($val->date_transaction)) }}</td>
+                        <td>{{$val->num_ap}}</td>
+                        <td>{{$val->nom_partenaire}}</td>
+                        <td>{{ $onglet_facturation[$val->onglet_facturation_id]['libelle'] }}</td>
+                        <td style="text-align: right">{{ number_format($val->transaction_amount, 2, ","," ") }}</td>
+                        <td style="text-align: right">{{ number_format($val->commission, 2, ","," " )}}</td>
+                        <td style="text-align: right">{{ number_format($val->a_reverser, 2, ","," " ) }}</td>
+                        <td>{{$val->compte_bancaire}}</td>
+                    </tr>
+                    @empty
+                    <tr>PAS DE FACTURE DISPONIBLE</tr>
+                    @endforelse    
+                    <tr>
+                        <td colspan="6" style="text-align: center;background-color:#948a54;border: 1px solid black"><b>SOUS-TOTAL ACHATS PASS INTERNET</b></td>
+                        <td style="text-align: right"><b>{{ number_format($facture_pi_sum, 2, ","," " ) }}</b></td>
+                        <td></td>
+                    </tr>
+                    @forelse($facturePtups as $val)
+                    <tr>
+                        <td>{{ date('d/m/Y', strtotime($val->date_transaction)) }}</td>
+                        <td>{{$val->num_ap}}</td>
+                        <td>{{$val->nom_partenaire}}</td>
+                        <td>{{ $onglet_facturation[$val->onglet_facturation_id]['libelle'] }}</td>
+                        <td style="text-align: right">{{ number_format($val->transaction_amount, 2, ","," ") }}</td>
+                        <td style="text-align: right">{{ number_format($val->commission, 2, ","," " )}}</td>
+                        <td style="text-align: right">{{ number_format($val->a_reverser, 2, ","," " ) }}</td>
+                        <td>{{$val->compte_bancaire}}</td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="8">PAS DE FACTURE DISPONIBLE POUR CET ONGLET DE FACTURATION</td>
+                    </tr>
+                    @endforelse 
+                    <tr>
+                        <td colspan="6" style="text-align: center;background-color:#948a54;border: 1px solid black"><b>SOUS-TOTAL PTUPS</b></td>
+                        <td style="text-align: right"><b>{{ number_format($facture_ptups_sum, 2, ","," " ) }}</b></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td  style="height: 5px;"></td>
+                        <td  style="height: 5px;"></td>
+                        <td  style="height: 5px;"></td>
+                        <td  style="height: 5px;"></td>
+                        <td  style="height: 5px;"></td>
+                        <td  style="height: 5px;"></td>
+                        <td  style="height: 5px;"></td>
+                        <td  style="height: 5px;"></td>
+                    </tr>   
+                   
                 <tr>
-                    <td colspan="6" style="text-align: center;background-color:#948a54;border: 1px solid black"><b>Total</b></td>
-                    <td style="text-align: right"><b>{{ number_format($facture_sum, 2, ","," " ) }}</b></td>
+                    <td colspan="6" style="text-align: center;background-color:#948a54;border: 1px solid black"><b>TOTAL GENERAL</b></td>
+                    <td style="text-align: right;background-color:#948a54;border"><b>{{ number_format($facture_sum, 2, ","," " ) }}</b></td>
                     <td></td>
                 </tr>
             </tbody>
+
+            @endif
         </table>
         <br>
         {{-- <div style="width: 25%">
